@@ -14,7 +14,7 @@ RUN apk add --update --no-cache \
     dcron=4.5
 
 # Install Python dependencies.
-RUN python3 -m ensurepip && pip3 install jinja2
+RUN python3 -m ensurepip && pip3 install jinja2==2.11.3
 
 # Copy sources.
 COPY generate_config.py /src/
