@@ -6,12 +6,12 @@ VOLUME /etc/letsencrypt
 # Install system dependencies.
 RUN apk add --update --no-cache \
     # Postfix itself:
-    postfix=3.5.9-r0 postfix-pgsql=3.5.9-r0 \
+    postfix>=3.5 postfix-pgsql>=3.5 \
     # To generate Postfix config files:
-    python3=3.8.7 \
+    python3>=3.8 \
     # To generate and renew Postfix TLS certificate:
-    certbot=1.12 \
-    dcron=4.5
+    certbot>=1.11 \
+    dcron>=4.5
 
 # Install Python dependencies.
 RUN python3 -m ensurepip && pip3 install jinja2==2.11.3
@@ -26,5 +26,3 @@ COPY templates /src/templates
 WORKDIR /src
 CMD ["./docker-entrypoint.sh"]
 
-# Idea taken from https://github.com/Mailu/Mailu/blob/master/core/postfix/Dockerfile
-HEALTHCHECK --start-period=350s CMD echo QUIT|nc localhost 25|grep "220 .* ESMTP Postfix"
