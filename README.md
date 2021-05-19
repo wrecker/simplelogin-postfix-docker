@@ -1,10 +1,7 @@
-# Docker Image for SimpleLogin Postfix
+# Docker Image for SimpleLogin Postfix with certbot dns01 challenge
 
-No official Postfix image, tailor-made for [SimpleLogin](https://simplelogin.io/),
-currently exists.
-
-Let's fix that, by providing to the community something very lightweight,
-secure\* (with [Let's Encrypt](https://letsencrypt.org/) support) and simple to use 💖
+This is fork of [simplelogin-postfix-docker](https://github.com/simple-login/simplelogin-postfix-docker) that adds support for using DNS01 challenge with certbot.
+Currently this docker image only support using the certbot [cloudflare dns plugin](https://certbot-dns-cloudflare.readthedocs.io/en/stable/)
 
 \* if a TLS certificate cannot be automatically generated when starting the container, Postfix will run without TLS activated, until the next attempt (happens every hour)
 
@@ -27,6 +24,18 @@ Setting     | Description
 Used by and made for [Kloügle](https://github.com/arugifa/klougle), the Google
 alternative automated with [Terraform](https://www.terraform.io/).
 
+## Using this image
+Create an API Token in your cloudflare account with Zone Edit access restricted to the domain to use with this container. Create a file `dns-cloudflare-creds.ini` and save the
+cloudflare API Token
+```sh
+# Cloudflare API token used by Certbot
+dns_cloudflare_api_token = 0123456789abcdef0123456789abcdef01234567
+```
+Now start the container with this image and mount the file into the container as `/.certbot/dns-cloudflare-creds.ini`
+
+```
+docker run -d --env-file ... -v <path-to-dns-cloudflare-creds.ini>:/.certbot/dns-cloudflare-creds.ini` simplelogin-postfix
+```
 
 ## Troubleshooting
 
